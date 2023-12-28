@@ -22,6 +22,9 @@ namespace RopoParameter {
 	static constexpr float CHASSIS_X_SCALE 			= 2.3f;
 	static constexpr float CHASSIS_Y_SCALE 			= 1.4f;
 	static constexpr float CHASSIS_W_SCALE 			= 8.0f;
+
+	// Adapter Parameter
+	static constexpr int ADAPTER_PARAMETER_PORT 	= 12;
 };
 
 #endif // ROPO_PARAMETER_HPP

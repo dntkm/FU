@@ -7,6 +7,8 @@
 #include "RopoWheelModule.hpp"
 #include "RopoChassis.hpp"
 #include "RopoController.hpp"
+#include "RopoSensor/RaspberryPiAdapter.hpp"
+#include "RopoSensor/Debugger.hpp"
 
 namespace RopoDevice {
 	// Controller
@@ -42,6 +44,10 @@ namespace RopoDevice {
 													leftBackMotorModule,
 													rightBackMotorModule,
 													rightFrontMotorModule);
+
+	// Adapter
+	static RopoSensor::RaspberryPiAdapter adapter(RopoParameter::ADAPTER_PARAMETER_PORT, 115200, 5);
+	// static RopoSensor::Debugger adapter(RopoParameter::ADAPTER_PARAMETER_PORT, 115200, 5);
 }
 
 #endif // ROPO_DEVICE_HPP
