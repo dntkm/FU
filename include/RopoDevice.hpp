@@ -9,6 +9,7 @@
 #include "RopoController.hpp"
 #include "RopoSensor/RaspberryPiAdapter.hpp"
 #include "RopoSensor/Debugger.hpp"
+#include "RopoSensor/EncodingDisk.hpp"
 
 namespace RopoDevice {
 	// Controller
@@ -40,6 +41,15 @@ namespace RopoDevice {
 	static RopoWheelModule::WheelModule rightBackMotorModule(rightBackMotor0, rightBackMotor1);
 	static RopoWheelModule::WheelModule rightFrontMotorModule(rightFrontMotor0, rightFrontMotor1);
 
+	static pros::Imu Inertial(RopoParameter::IMU_PORT);
+
+	static RopoSensor::EncodingDisk XEncodingDisk(RopoParameter::EncodingDisk_Receive_ID,
+													RopoParameter::EncodingDisk_Receive_Baudrate,
+													RopoParameter::EncodingDisk_Send_ID,
+													RopoParameter::EncodingDisk_Send_Baudrate,
+													RopoParameter::EncodingDisk_SamplingDelay);
+
+
 	static RopoChassis::ChassisModule chassisModule(leftFrontMotorModule,
 													leftBackMotorModule,
 													rightBackMotorModule,
@@ -48,6 +58,26 @@ namespace RopoDevice {
 	// Adapter
 	static RopoSensor::RaspberryPiAdapter adapter(RopoParameter::ADAPTER_PARAMETER_PORT, 115200, 5);
 	// static RopoSensor::Debugger adapter(RopoParameter::ADAPTER_PARAMETER_PORT, 115200, 5);
+
+	void DeviceInit(){
+		Inertial.reset(true);
+		while(Inertial.is_calibrating())pros::delay(20);
+		RopoDevice::masterController.clear();
+		pros::delay(100);
+		RopoDevice::masterController.print(0,0,"IMU Ready!!");
+		pros::delay(100);
+		XEncodingDisk.SetZero();
+		leftFrontMotor0.set_brake_mode(pros::E_MOTOR_BRAKE_BRAKE);
+		leftFrontMotor1.set_brake_mode(pros::E_MOTOR_BRAKE_BRAKE);
+		leftBackMotor0.set_brake_mode(pros::E_MOTOR_BRAKE_BRAKE);
+		leftBackMotor1.set_brake_mode(pros::E_MOTOR_BRAKE_BRAKE);
+		rightBackMotor0.set_brake_mode(pros::E_MOTOR_BRAKE_BRAKE);
+		rightBackMotor1.set_brake_mode(pros::E_MOTOR_BRAKE_BRAKE);
+		rightFrontMotor0.set_brake_mode(pros::E_MOTOR_BRAKE_BRAKE);
+		rightFrontMotor1.set_brake_mode(pros::E_MOTOR_BRAKE_BRAKE);
+		
+	}
+
 }
 
 #endif // ROPO_DEVICE_HPP
