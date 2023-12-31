@@ -7,7 +7,7 @@
 namespace RopoParameter {
 	// Chassis Motor Parameter
 	static constexpr pros::motor_gearset_e CHASSIS_MOTOR_GEARSET = pros::E_MOTOR_GEAR_BLUE;
-	static constexpr int LEFT_FRONT_MOTOR_PORT[] 	= {4 , 5};
+	static constexpr int LEFT_FRONT_MOTOR_PORT[] 	= {4 , 3};
 	static constexpr int LEFT_BACK_MOTOR_PORT[] 	= {13 , 1};
 	static constexpr int RIGHT_BACK_MOTOR_PORT[] 	= {9, 10};
 	static constexpr int RIGHT_FRONT_MOTOR_PORT[] 	= {6 , 7};

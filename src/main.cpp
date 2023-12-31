@@ -5,11 +5,11 @@
 namespace ControllerModule{
 	void Display(){
 		while(true){
-			RopoDevice::masterController.print(0,1,"degree: %.1lf",-RopoDevice::Inertial.get_yaw());
+			RopoDevice::masterController.print(0,1,"degree: %.1lf",-RopoDevice::inertial.get_yaw());
 			pros::delay(100); 
-			RopoDevice::masterController.print(1,1,"X: %.2lf Y:%.2lf",RopoDevice::XEncodingDisk.GetPosX(),RopoDevice::XEncodingDisk.GetPosY());
+			RopoDevice::masterController.print(1,1,"X: %.3lf Y:%.3lf   ",RopoDevice::xEncodingDisk.GetPosX(),RopoDevice::xEncodingDisk.GetPosY());
 			pros::delay(100); 
-			RopoDevice::masterController.print(2,1,"%s",RopoDevice::XEncodingDisk.IsReading() ? "true " : "false" );
+			RopoDevice::masterController.print(2,1,"X: %.3lf Y:%.3lf  ",RopoDevice::xDrivePositionModule.GetPosX(),RopoDevice::xDrivePositionModule.GetPosY() );
 			pros::delay(100); 
 		}
 	}

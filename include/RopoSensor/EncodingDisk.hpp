@@ -69,9 +69,9 @@ namespace RopoSensor{
 			}
 		public:
 			//获得机体相对于零点x方向的坐标pos_x
-			float GetPosX(){return -PosY;}		
+			float GetPosX(){return -PosY / 1000.0;}		
 			//获得机体相对于零点y方向的坐标pos_y
-			float GetPosY(){return PosX;}			
+			float GetPosY(){return  PosX / 1000.0;}			
 			//获得机体偏离Tag所示轴向的角度Tag angle 
 				//Tag: 0_x 1_y 2_z
 			float GetAngle(int Tag){return Angle[Tag];}
