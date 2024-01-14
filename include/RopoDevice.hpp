@@ -43,6 +43,8 @@ namespace RopoDevice {
 	static RopoWheelModule::WheelModule rightFrontMotorModule(rightFrontMotor0, rightFrontMotor1);
 
 	static pros::Imu inertial(RopoParameter::IMU_PORT);
+	static pros::Gps vex_gps(RopoParameter::GPS_PORT           , RopoParameter::GPSX_INITIAL, RopoParameter::GPSY_INITIAL,
+						     RopoParameter::GPS_HEADING_INITIAL, RopoParameter::GPSX_OFFSET , RopoParameter::GPSY_OFFSET);
 
 	static RopoSensor::EncodingDisk xEncodingDisk(RopoParameter::EncodingDisk_Receive_ID,
 													RopoParameter::EncodingDisk_Receive_Baudrate,
@@ -69,6 +71,7 @@ namespace RopoDevice {
 		RopoDevice::masterController.print(0,0,"IMU Ready!!");
 		pros::delay(100);
 		xEncodingDisk.SetZero();
+		pros::delay(100);
 		xDrivePositionModule.ResetPosition();
 		leftFrontMotor0.set_brake_mode(pros::E_MOTOR_BRAKE_BRAKE);
 		leftFrontMotor1.set_brake_mode(pros::E_MOTOR_BRAKE_BRAKE);
