@@ -1,17 +1,24 @@
 #include "main.h"
-#include "RopoDevice.hpp"
-#include "RopoController.hpp"
+
 
 namespace ControllerModule{
 	void Display(){
 		while(true){
-			RopoDevice::masterController.print(0,1,"degree: %.1lf",-RopoDevice::inertial.get_yaw());
+			// RopoDevice::masterController.print(0,1,"degree: %.1lf",-RopoDevice::inertial.get_yaw());
+			// pros::delay(100); 
+			RopoDevice::masterController.print(2,0,"eX:%.3lf Y:%.3lf   ",RopoDevice::xEncodingDisk.GetPosX(),RopoDevice::xEncodingDisk.GetPosY());
 			pros::delay(100); 
-			RopoDevice::masterController.print(1,1,"X: %.3lf Y:%.3lf   ",RopoDevice::xEncodingDisk.GetPosX(),RopoDevice::xEncodingDisk.GetPosY());
+			RopoDevice::masterController.print(1,0,"xX: %.3lf mY:%.3lf  ",RopoDevice::xDrivePositionModule.GetPosX(),RopoDevice::xDrivePositionModule.GetPosY() );
 			pros::delay(100); 
-			RopoDevice::masterController.print(2,1,"X: %.3lf Y:%.3lf  ",RopoDevice::xDrivePositionModule.GetPosX(),RopoDevice::xDrivePositionModule.GetPosY() );
+			RopoDevice::masterController.print(0,0,"gx:%.3lf y:%.3lf", (RopoDevice::GetTransformedPosition())[1],(RopoDevice::GetTransformedPosition())[2]);
 			pros::delay(100); 
+			// RopoDevice::masterController.print(2,0,"fx:%.3lf y:%.3lf", RopoDevice::gpsAddPosition.GetGpsTransformRelativePositionX(), RopoDevice::gpsAddPosition.GetGpsTransformRelativePositionY());
+			// pros::delay(100); 
 		}
+	}
+
+	void GpsUpdate(){
+		RopoDevice::gpsAddPosition.GpsUpdate();
 	}
 }
 
@@ -33,6 +40,10 @@ void opcontrol() {
 	RopoController::AxisValueCast wVelocityInput(RopoDevice::masterController, pros::E_CONTROLLER_ANALOG_RIGHT_X, RopoController::Exp);
 	float xInput, yInput, wInput;
 	RopoMath::Vector<float> inputVelocity(RopoMath::ColumnVector, 3);
+
+	RopoController::ButtonTaskLine ButtonDetectLine(RopoDevice::masterController);
+	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_X, RopoController::Rising, ControllerModule::GpsUpdate);
+	ButtonDetectLine.Enable();
 
 	int cur = 0;
 	/*

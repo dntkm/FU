@@ -3,6 +3,7 @@
 
 #include "pros/motors.hpp"
 #include "pros/misc.hpp"
+#include "pros/gps.hpp"
 #include "RopoParameter.hpp"
 #include "RopoWheelModule.hpp"
 #include "RopoChassis.hpp"
@@ -11,6 +12,8 @@
 #include "RopoSensor/Debugger.hpp"
 #include "RopoSensor/EncodingDisk.hpp"
 #include "RopoXDrivePosition.hpp"
+#include "RopoGpsAddPosition.hpp"
+#include "RopoApi.hpp"
 
 namespace RopoDevice {
 	// Controller
@@ -41,19 +44,39 @@ namespace RopoDevice {
 	static RopoWheelModule::WheelModule leftBackMotorModule(leftBackMotor0, leftBackMotor1);
 	static RopoWheelModule::WheelModule rightBackMotorModule(rightBackMotor0, rightBackMotor1);
 	static RopoWheelModule::WheelModule rightFrontMotorModule(rightFrontMotor0, rightFrontMotor1);
-
+//三周惯性传感器
 	static pros::Imu inertial(RopoParameter::IMU_PORT);
-	static pros::Gps vex_gps(RopoParameter::GPS_PORT           , RopoParameter::GPSX_INITIAL, RopoParameter::GPSY_INITIAL,
+//GPS定位S
+	static pros::Gps vexGps(RopoParameter::GPS_PORT           , RopoParameter::GPSX_INITIAL, RopoParameter::GPSY_INITIAL,
 						     RopoParameter::GPS_HEADING_INITIAL, RopoParameter::GPSX_OFFSET , RopoParameter::GPSY_OFFSET);
-
-	static RopoSensor::EncodingDisk xEncodingDisk(RopoParameter::EncodingDisk_Receive_ID,
-													RopoParameter::EncodingDisk_Receive_Baudrate,
-													RopoParameter::EncodingDisk_Send_ID,
-													RopoParameter::EncodingDisk_Send_Baudrate,
-													RopoParameter::EncodingDisk_SamplingDelay);
-
+//码盘定位 
+	static RopoSensor::EncodingDisk xEncodingDisk(RopoParameter::ENCODINGDISK_RECEIVE_ID,
+													RopoParameter::ENCODINGDISK_RECEIVE_BAUDRATE,
+													RopoParameter::ENCODINGDISK_SEND_ID,
+													RopoParameter::ENCODINGDISK_SEND_BAUDRATE,
+													RopoParameter::ENCODINGDISK_SAMPLINGDELAY);
+//编码器定位
 	static RopoXDrivePosition::XPositionModule xDrivePositionModule( leftFrontMotor1, leftBackMotor1, rightBackMotor1, rightFrontMotor1, inertial );
+//获取角度
+	FloatType GetHeading(){
+		return -RopoDevice::inertial.get_yaw();
+	}
 
+// 坐标获取函数
+	Vector GetPosition(){
+		Vector PositionVector(RopoMath::ColumnVector,2);
+		PositionVector[1] =  RopoDevice::xDrivePositionModule.GetPosX();
+		PositionVector[2] =  RopoDevice::xDrivePositionModule.GetPosY();
+		PositionVector[3] =  GetHeading();
+
+		return PositionVector;
+	}
+    
+	RopoGpsAddPosition::GpsAddPositionModule gpsAddPosition(GetPosition,vexGps,2);
+
+	Vector GetTransformedPosition(){
+		return gpsAddPosition.GetTransformedPosition();
+	}
 	static RopoChassis::ChassisModule chassisModule(leftFrontMotorModule,
 													leftBackMotorModule,
 													rightBackMotorModule,
