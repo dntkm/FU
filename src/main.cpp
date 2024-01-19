@@ -35,8 +35,8 @@ void autonomous() {}
 
 void opcontrol() {
 	pros::Task *DisplayTask = new pros::Task(ControllerModule::Display);
-	RopoController::AxisValueCast xVelocityInput(RopoDevice::masterController, pros::E_CONTROLLER_ANALOG_LEFT_Y , RopoController::Exp);
-	RopoController::AxisValueCast yVelocityInput(RopoDevice::masterController, pros::E_CONTROLLER_ANALOG_LEFT_X , RopoController::Exp);
+	RopoController::AxisValueCast xVelocityInput(RopoDevice::masterController, pros::E_CONTROLLER_ANALOG_LEFT_Y , RopoController::Linear);
+	RopoController::AxisValueCast yVelocityInput(RopoDevice::masterController, pros::E_CONTROLLER_ANALOG_LEFT_X , RopoController::Linear);
 	RopoController::AxisValueCast wVelocityInput(RopoDevice::masterController, pros::E_CONTROLLER_ANALOG_RIGHT_X, RopoController::Exp);
 	float xInput, yInput, wInput;
 	RopoMath::Vector<float> inputVelocity(RopoMath::ColumnVector, 3);
@@ -62,6 +62,7 @@ void opcontrol() {
 		xInput =   xVelocityInput.GetAxisValue();
 		yInput = - yVelocityInput.GetAxisValue();
 		wInput = - wVelocityInput.GetAxisValue();
+		wInput = wInput * (1 - 4.0 / 7.0 * fabs(sqrt(xInput * xInput + yInput * yInput)));
 		inputVelocity[1] = (fabs(xInput) < 0.08) ? (0) : (xInput  * RopoParameter::CHASSIS_X_SCALE);
 		inputVelocity[2] = (fabs(yInput) < 0.08) ? (0) : (yInput  * RopoParameter::CHASSIS_Y_SCALE);
 		inputVelocity[3] = (fabs(wInput) < 0.08) ? (0) : (wInput  * RopoParameter::CHASSIS_W_SCALE);

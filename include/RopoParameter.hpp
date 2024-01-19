@@ -22,9 +22,10 @@ namespace RopoParameter {
 	static constexpr int IMU_PORT = 5;
 
 	// Chassis Control Parameter
-	static constexpr float CHASSIS_X_SCALE 			= 2.3f;
-	static constexpr float CHASSIS_Y_SCALE 			= 1.4f;
-	static constexpr float CHASSIS_W_SCALE 			= 8.0f;
+	//1.73
+	static constexpr float CHASSIS_X_SCALE 			= 1.6f;//1.49
+	static constexpr float CHASSIS_Y_SCALE 			= 1.0f;//0.86
+	static constexpr float CHASSIS_W_SCALE 			= 7.0f;//9.56
 
 	// Adapter Parameter
 	static constexpr int ADAPTER_PARAMETER_PORT 	= 12;

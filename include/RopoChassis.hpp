@@ -24,6 +24,9 @@ namespace RopoChassis {
 				{(float) 1.0/sin(RopoParameter::CHASSIS_WHEEL_ANGLE), (float) 1.0/cos(RopoParameter::CHASSIS_WHEEL_ANGLE), RopoParameter::CHASSIS_PARA_L}
 			};
 			RopoMath::Vector<float> motorVelocity = parameterMatrix * velocity;
+			double VcMax = 600.0 / 60.0 / RopoParameter::CHASSIS_WHEEL_GEAR_RATIO * (2 * RopoMath::Pi * RopoParameter::CHASSIS_WHEEL_R);
+			double fMax  = std::max({std::fabs(motorVelocity[1]),std::fabs(motorVelocity[2]),std::fabs(motorVelocity[3]),std::fabs(motorVelocity[4])});
+			if(fMax > VcMax) {motorVelocity = motorVelocity * (VcMax / fMax);}
 			leftFrontWheelModule	.MoveVelocity(motorVelocity[1]);
 			rightFrontWheelModule	.MoveVelocity(motorVelocity[4]);
 			rightBackWheelModule	.MoveVelocity(motorVelocity[3]);
